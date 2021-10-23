@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag amirdaaee/wireguard-redsocks:latest --tag amirdaaee/wireguard-redsocks:${GITHUB_REF#refs/*/}
+    - name: login to docker hub
+      run: docker login -u amirdaaee -p $DOCKERHUB_PASSWORD
+      env:
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: push to dockerhub
+      run: |
+        docker push  amirdaaee/wireguard-redsocks:latest
+        docker push  amirdaaee/wireguard-redsocks:${GITHUB_REF#refs/*/}
