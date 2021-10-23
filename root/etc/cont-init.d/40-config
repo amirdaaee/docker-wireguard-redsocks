@@ -6,10 +6,10 @@ if [[ ! -f /config/redsocks/redsocks.conf ]]; then
     SOCKS_HOST=${SOCKS_HOST:-127.0.0.1}
     SOCKS_PORT=${SOCKS_PORT:-9050}
     cp /defaults/redsocks.conf /config/redsocks/redsocks.conf
-    sed 's|__SOCKS_HOST__|${SOCKS_HOST}|g' /config/redsocks/redsocks.conf
-    sed 's|__SOCKS_PORT__|${SOCKS_PORT}|g' /config/redsocks/redsocks.conf
+    sed -i "s|__SOCKS_HOST__|${SOCKS_HOST}|" /config/redsocks/redsocks.conf
+    sed -i "s|__SOCKS_PORT__|${SOCKS_PORT}|" /config/redsocks/redsocks.conf
 fi
 if [[ ! -f /config/redsocks/iptables ]]; then
     cp /defaults/iptables /config/redsocks/iptables
-    sed 's|__SUBNET__|${INTERNAL_SUBNET:-10.13.13.0}/24|g' /config/redsocks/iptables
+    sed -i "s|__SUBNET__|${INTERNAL_SUBNET:-10.13.13.0}/24|" /config/redsocks/iptables
 fi
