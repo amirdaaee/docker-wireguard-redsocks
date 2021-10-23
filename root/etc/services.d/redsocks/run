@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+_term() {
+    echo "Caught SIGTERM signal!"
+    iptables -t nat -D PREROUTING $(cat /config/redsocks/iptables) 
+}
+
+if [[ -n "${SOCKS_HOST}" && -n "${SOCKS_PORT}" ]]; then
+    trap _term SIGTERM
+    echo "adding redsocks iptables rule"
+    iptables -t nat -A PREROUTING $(cat /config/redsocks/iptables) 
+    echo "starting redsocks"
+    redsocks -c /config/redsocks/redsocks.conf
+    sleep infinity &
+    wait
+fi
